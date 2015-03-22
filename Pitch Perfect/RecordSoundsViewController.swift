@@ -20,8 +20,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var resumeRecordingButton: UIButton!
     
-    var audioRecorder:AVAudioRecorder!
-    var recordedAudio:RecordedAudio!
+    var audioRecorder: AVAudioRecorder!
+    var recordedAudio: RecordedAudio!
     
     override func viewWillAppear(animated: Bool) {
         //hide the stop button
@@ -83,15 +83,12 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         
         if(flag){
             recordedAudio = RecordedAudio(filePathUrlTemp: recorder.url, titleTemp: recorder.url.lastPathComponent!)
-      
-        
             self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
-        }else{
+        } else {
             println("Recording was not successful")
             recordButton.enabled = true
             stopButton.hidden = true
         }
-        
         
     }
   
