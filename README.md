@@ -1,6 +1,6 @@
 ﻿## Pitch Perfect
 
-itch Perfect is Project 1 towards iOS Developer Nanodegree from https://www.udacity.com/
+Pitch Perfect is Project 1 towards iOS Developer Nanodegree from https://www.udacity.com/
 
 ## Overview
 
