@@ -2,6 +2,7 @@
 
 Pitch Perfect is Project 1 towards iOS Developer Nanodegree from https://www.udacity.com/
 
+
 ## Overview
 
 This is an iPhone app that allows users to record their voice and then modulates the recorded audio to sound like a Chipmunk or Darth Vader. The app also lets the user speed up or slow down the rate of playback.
@@ -10,6 +11,18 @@ This is an iPhone app that allows users to record their voice and then modulates
 ## Details
 
 Upon installation of the app, press the record button, say your favorite quote, press stop button when you are finished after which you get a view where you can choose your play with different modulations of the recorded audio. Enjoy!
+
+
+## What have I learned
+I learned how to:
+* Create a new project from existing iOS app templates
+* Add buttons, images, labels and create user interfaces for the app using the Storyboard
+* Leverage the Model View Controller (MVC) design principles; this includes writing custom model code, and using UIViewController, and UIView
+* Create Outlet and Action connections between the views and view controllers. Benefit from the power of Delegates by using them in code
+* Navigate between two scenes in the app using UINavigationController
+* Play audio files using AVFoundation’s AVAudioEngine class
+* Run the iOS simulator and download the app on a physical device
+* Search documentation, resolve bugs, and read other people’s code
 
 
 ## License
