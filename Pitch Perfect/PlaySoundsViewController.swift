@@ -26,31 +26,40 @@ class PlaySoundsViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
+        audioPlayer = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
         audioPlayer.enableRate = true
         
         // instantiate the second copy of the audio file for the echo effect
         //audioPlayerEcho = self.audioPlayer
-        audioPlayerEcho = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
+        audioPlayerEcho = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
         audioPlayerEcho.enableRate = true
         
         audioEngine = AVAudioEngine()
-        audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
+        audioFile = try? AVAudioFile(forReading: receivedAudio.filePathUrl)
         
         
         // initialize reverb effect audio players
-        for i in 0...N{
-            var temp = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
+        for _ in 0...N{
+            let temp = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
             
-            reverbPlayers.append(temp)
+            reverbPlayers.append(temp!)
         }
         
         
         //This piece of code (AVAudioSessionCategoryPlayback) will cause the audio to play from the best place for output
         let session = AVAudioSession.sharedInstance()
-        var error: NSError?
-        session.setCategory(AVAudioSessionCategoryPlayback, error: &error)
-        session.setActive(true, error: &error)
+        do {
+            try session.setCategory(AVAudioSessionCategoryPlayback)
+        } catch  {
+            print("couldn't set category \(error)")
+            return
+        }
+        do {
+            try session.setActive(true)
+        } catch  {
+            print("couldn't set category active \(error)")
+            return
+        }
         
     }
 
@@ -97,10 +106,10 @@ class PlaySoundsViewController: UIViewController {
     func playAudioWithVariablePitch(pitch: Float){
         self.stopAllAudio()
         
-        var audioPlayerNode = AVAudioPlayerNode()
+        let audioPlayerNode = AVAudioPlayerNode()
         audioEngine.attachNode(audioPlayerNode)
         
-        var changePitchEffect = AVAudioUnitTimePitch()
+        let changePitchEffect = AVAudioUnitTimePitch()
         changePitchEffect.pitch = pitch
         audioEngine.attachNode(changePitchEffect)
         
@@ -108,7 +117,10 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.connect(changePitchEffect, to: audioEngine.outputNode, format: nil)
         
         audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
-        audioEngine.startAndReturnError(nil)
+        do {
+            try audioEngine.start()
+        } catch _ {
+        }
         
         audioPlayerNode.play()
     }
@@ -140,12 +152,12 @@ class PlaySoundsViewController: UIViewController {
         let delay:NSTimeInterval = 0.02
         
         for i in 0...N{
-            var currentDelay:NSTimeInterval = delay * NSTimeInterval(i)
+            let currentDelay:NSTimeInterval = delay * NSTimeInterval(i)
             
-            var player:AVAudioPlayer = reverbPlayers[i]
+            let player:AVAudioPlayer = reverbPlayers[i]
             
-            var exponent:Double = -Double(i)/Double(N/2)
-            var volume = Float(pow(Double(M_E), exponent))
+            let exponent:Double = -Double(i)/Double(N/2)
+            let volume = Float(pow(Double(M_E), exponent))
             player.volume = volume
             player.playAtTime(player.deviceCurrentTime + currentDelay)
             }
@@ -161,7 +173,7 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.reset()
         
         for i in 0...N{
-            var player:AVAudioPlayer = reverbPlayers[i]
+            let player:AVAudioPlayer = reverbPlayers[i]
             
             player.stop()
             player.currentTime = 0
@@ -177,7 +189,7 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.reset()
         
         for i in 0...N{
-            var player:AVAudioPlayer = reverbPlayers[i]
+            let player:AVAudioPlayer = reverbPlayers[i]
             
             player.stop()
         }
