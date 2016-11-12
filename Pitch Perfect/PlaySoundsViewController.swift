@@ -26,21 +26,21 @@ class PlaySoundsViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        audioPlayer = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
+        audioPlayer = try? AVAudioPlayer(contentsOf: receivedAudio.filePathUrl as URL)
         audioPlayer.enableRate = true
         
         // instantiate the second copy of the audio file for the echo effect
         //audioPlayerEcho = self.audioPlayer
-        audioPlayerEcho = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
+        audioPlayerEcho = try? AVAudioPlayer(contentsOf: receivedAudio.filePathUrl as URL)
         audioPlayerEcho.enableRate = true
         
         audioEngine = AVAudioEngine()
-        audioFile = try? AVAudioFile(forReading: receivedAudio.filePathUrl)
+        audioFile = try? AVAudioFile(forReading: receivedAudio.filePathUrl as URL)
         
         
         // initialize reverb effect audio players
         for _ in 0...N{
-            let temp = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
+            let temp = try? AVAudioPlayer(contentsOf: receivedAudio.filePathUrl as URL)
             
             reverbPlayers.append(temp!)
         }
@@ -73,7 +73,7 @@ class PlaySoundsViewController: UIViewController {
     
     
   
-    @IBAction func playSlowAudio(sender: UIButton) {
+    @IBAction func playSlowAudio(_ sender: UIButton) {
         
         self.stopAllAudio()
         
@@ -83,7 +83,7 @@ class PlaySoundsViewController: UIViewController {
     }
     
     
-    @IBAction func playFastAudio(sender: UIButton) {
+    @IBAction func playFastAudio(_ sender: UIButton) {
         
         self.stopAllAudio()
         // play audio fast
@@ -92,31 +92,31 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.play()
     }
     
-    @IBAction func playChipmunkAudio(sender: UIButton) {
+    @IBAction func playChipmunkAudio(_ sender: UIButton) {
         playAudioWithVariablePitch(1000)
 
     }
     
     
-    @IBAction func playDarthvaderAudio(sender: UIButton) {
+    @IBAction func playDarthvaderAudio(_ sender: UIButton) {
         
         playAudioWithVariablePitch(-1000)
     }
     
-    func playAudioWithVariablePitch(pitch: Float){
+    func playAudioWithVariablePitch(_ pitch: Float){
         self.stopAllAudio()
         
         let audioPlayerNode = AVAudioPlayerNode()
-        audioEngine.attachNode(audioPlayerNode)
+        audioEngine.attach(audioPlayerNode)
         
         let changePitchEffect = AVAudioUnitTimePitch()
         changePitchEffect.pitch = pitch
-        audioEngine.attachNode(changePitchEffect)
+        audioEngine.attach(changePitchEffect)
         
         audioEngine.connect(audioPlayerNode, to: changePitchEffect, format: nil)
         audioEngine.connect(changePitchEffect, to: audioEngine.outputNode, format: nil)
         
-        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
+        audioPlayerNode.scheduleFile(audioFile, at: nil, completionHandler: nil)
         do {
             try audioEngine.start()
         } catch _ {
@@ -125,7 +125,7 @@ class PlaySoundsViewController: UIViewController {
         audioPlayerNode.play()
     }
     
-    @IBAction func playEchoSound(sender: UIButton) {
+    @IBAction func playEchoSound(_ sender: UIButton) {
         self.stopAllAudio()
         
         // reset rate value to default, otherwise playSlowAudio or playFastAudio will still be implemented
@@ -135,31 +135,31 @@ class PlaySoundsViewController: UIViewController {
         
         
         
-        let delay:NSTimeInterval = 0.1//100ms
-        var playtime:NSTimeInterval
+        let delay:TimeInterval = 0.1//100ms
+        var playtime:TimeInterval
         playtime = audioPlayerEcho.deviceCurrentTime + delay
 
         audioPlayerEcho.currentTime = 0
         audioPlayerEcho.volume = 0.8;
-        audioPlayerEcho.playAtTime(playtime)
+        audioPlayerEcho.play(atTime: playtime)
         
     }
     
     
-    @IBAction func playReverbSound(sender: UIButton) {
+    @IBAction func playReverbSound(_ sender: UIButton) {
         self.stopAllAudio()
         
-        let delay:NSTimeInterval = 0.02
+        let delay:TimeInterval = 0.02
         
         for i in 0...N{
-            let currentDelay:NSTimeInterval = delay * NSTimeInterval(i)
+            let currentDelay:TimeInterval = delay * TimeInterval(i)
             
             let player:AVAudioPlayer = reverbPlayers[i]
             
             let exponent:Double = -Double(i)/Double(N/2)
             let volume = Float(pow(Double(M_E), exponent))
             player.volume = volume
-            player.playAtTime(player.deviceCurrentTime + currentDelay)
+            player.play(atTime: player.deviceCurrentTime + currentDelay)
             }
     }
     
@@ -181,7 +181,7 @@ class PlaySoundsViewController: UIViewController {
     }
     
     // called by pressing the button
-    @IBAction func stopAudio(sender: UIButton) {
+    @IBAction func stopAudio(_ sender: UIButton) {
         audioPlayer.stop()
         audioPlayerEcho.stop()
         
