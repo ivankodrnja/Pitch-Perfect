@@ -64,30 +64,22 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         formatter.dateFormat = "ddMMyyyy-HHmmss"
         let recordingName = formatter.string(from: currentDateTime)+".wav"
         let pathArray = [dirPath, recordingName]
-        let filePath = NSURL.fileURL(withPathComponents: pathArray)
+        //let filePath = NSURL.fileURL(withPathComponents: pathArray)
+        let filePath = URL(string: pathArray.joined(separator: "/"))
         
         
         let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
-        } catch _ {
-        }
-        do {
-            try session.setActive(true)
-        } catch _ {
-        }
+        try! session.setCategory(AVAudioSessionCategoryPlayAndRecord, with: AVAudioSessionCategoryOptions.defaultToSpeaker)
+
         
+        try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
         
-        do {
-        audioRecorder = try AVAudioRecorder(url: filePath!, settings: [:])
         audioRecorder.delegate = self
         audioRecorder.isMeteringEnabled = true
         audioRecorder.prepareToRecord()
         audioRecorder.record()
-        } catch {
-            
-        }
-    
+        
+
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
@@ -136,10 +128,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.stop()
         
         let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setActive(false)
-        } catch _ {
-        }
+         try! audioSession.setActive(false)
+        
         
     }
 

@@ -16,11 +16,11 @@ class PlaySoundsViewController: UIViewController {
     var audioPlayerEcho: AVAudioPlayer!
     
     var receivedAudio:RecordedAudio!
-    var audioEngine: AVAudioEngine!
     var audioFile:AVAudioFile!
+    var audioEngine: AVAudioEngine!
     
     var reverbPlayers:[AVAudioPlayer] = []
-    let N:Int = 10
+    let N = 10
 
     override func viewDidLoad() {
         super.viewDidLoad()
