@@ -49,7 +49,12 @@ class PlaySoundsViewController: UIViewController {
         //This piece of code (AVAudioSessionCategoryPlayback) will cause the audio to play from the best place for output
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(AVAudioSessionCategoryPlayback)
+            if #available(iOS 10.0, *) {
+                //try session.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: <#AVAudioSession.Mode#>)
+                try session.setCategory(.playAndRecord, mode: .default, options: [])
+            } else {
+                // Fallback on earlier versions
+            }
         } catch  {
             print("couldn't set category \(error)")
             return
@@ -196,4 +201,9 @@ class PlaySoundsViewController: UIViewController {
     }
 
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
+	return input.rawValue
 }
